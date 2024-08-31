@@ -1,14 +1,21 @@
 server:
   port: 8082
-databases:
-  - user: mydb
-    password: mydb
-    host: localhost
-    dbName : mydb
-  - user: devdb
-    password: devdb
-    host: localhost
-    dbName : devdb
+postgresql:
+  username: root
+  password: root
+  host: 172.25.0.2
+  port: 5432
+  dbname : shopdev
+  maxIdleConns: 10
+  maxOpenConns: 100
+  connMaxLifeTime: 3600
 security:
   jwt:
-    secret: mysecret
+    secret: quang23@##@@
+logger:
+  file_name: "./storages/logger/logv1.001.log"
+  max_size:    500
+  max_backups: 3
+  max_age:     28
+  compress:   true
+  loglevel:  debug

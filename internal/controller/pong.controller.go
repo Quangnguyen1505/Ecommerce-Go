@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -18,6 +19,7 @@ func NewPongController() *PongController {
 }
 
 func (p *PongController) Pong(c *gin.Context) {
+	fmt.Println("router")
 	age := c.Query("age")
 	c.JSON(http.StatusOK, gin.H{
 		"message": "pong " + p.pongService.GetPong(),
