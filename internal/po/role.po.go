@@ -1,18 +1,16 @@
 package po
 
 import (
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
-type User struct {
+type Role struct {
 	gorm.Model
-	UUID      uuid.UUID `gore:"column:uuid; type:vachar(36); index:idx_uuid; primaryKey not_null; unique"`
-	UserName  string    `gore:"column:user_name; type:varchar(50); not_null"`
-	IsActived bool      `gore:"column:is_actived; type:boolean"`
-	Roles     []Role    `gore:"many2many: go_user_roles"`
+	ID       int64  `gorm:"column:id;type:int;primaryKey;autoIncrement;comment:'Primary key'"`
+	RoleName string `gorm:"column:role_name;type:varchar(50)"`
+	RoleNote string `gorm:"column:role_note;type:text"`
 }
 
-func (r *User) TableName() string {
-	return "go_db_users"
+func (r *Role) TableName() string {
+	return "go_db_role"
 }

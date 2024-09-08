@@ -1,11 +1,12 @@
 server:
-  port: 8082
+  port: 8081
+  mode: "dev"
 postgresql:
-  username: root
-  password: root
-  host: 172.25.0.2
+  username: postgres
+  password: 123456789@
+  host: localhost
   port: 5432
-  dbname : shopdev
+  dbname : shopdevgo
   maxIdleConns: 10
   maxOpenConns: 100
   connMaxLifeTime: 3600
@@ -19,3 +20,9 @@ logger:
   max_age:     28
   compress:   true
   loglevel:  debug
+redis:
+  host: localhost
+  port: 6379
+  password: 
+  db: 0
+  pool_size: 10

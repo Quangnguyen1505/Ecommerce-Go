@@ -4,6 +4,21 @@ type Config struct {
 	Postgresql PostgresqlSettings `mapstructure:"postgresql"`
 	Security   SecuritySettings   `mapstructure:"security"`
 	Logger     LoggerSettings     `mapstructure:"logger"`
+	Redis      RedisSettings      `mapstructure:"redis"`
+	Server     ServerSettings     `mapstructure:"server"`
+}
+
+type ServerSettings struct {
+	Port int    `mapstructure:"port"`
+	Mode string `mapstructure:"mode"`
+}
+
+type RedisSettings struct {
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
+	Db       int    `mapstructure:"db"`
+	Password string `mapstructure:"password"`
+	PoolSize int    `mapstructure:"pool_size"`
 }
 
 type PostgresqlSettings struct {

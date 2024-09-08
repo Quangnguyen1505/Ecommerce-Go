@@ -2,23 +2,40 @@ package initialize
 
 import (
 	"github.com/gin-gonic/gin"
-	c "github.com/ntquang/ecommerce/internal/controller"
-	"github.com/ntquang/ecommerce/internal/middleware"
+	"github.com/ntquang/ecommerce/global"
+	"github.com/ntquang/ecommerce/internal/routers"
 )
 
 func Initrouter() *gin.Engine {
-	r := gin.Default()
-	r.Use(middleware.Authentication())
-	v1 := r.Group("/v1")
-	{
-		v1.GET("/ping", c.NewPongController().Pong)
-		v1.GET("/user/1", c.NewUserController().GetUser)
-		// v1.POST("/ping", Pong)
-		// v1.PATCH("/ping", Pong)
-		// v1.DELETE("/ping", Pong)
-		// v1.PUT("/ping", Pong)
-		// v1.OPTIONS("/ping", Pong)
+	var r *gin.Engine
+	if global.Config.Server.Mode == "dev" {
+		gin.SetMode(gin.DebugMode)
+		gin.ForceConsoleColor()
+		r = gin.Default()
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+		r = gin.New()
 	}
 
+	//middleware
+	// r.Use() //logging
+	// r.Use() // cross
+	// r.Use() // limiter in global
+
+	manageRouter := routers.RouterGroupApp.Manage
+	userRouter := routers.RouterGroupApp.User
+
+	MainGroup := r.Group("/v1/2024")
+	{
+		MainGroup.GET("/checkStatus") //tracking monitor
+	}
+	{
+		userRouter.InitUserRouter(MainGroup)
+		userRouter.InitProductRouter(MainGroup)
+	}
+	{
+		manageRouter.InitAdminRouter(MainGroup)
+		manageRouter.InitUserRouter(MainGroup)
+	}
 	return r
 }
