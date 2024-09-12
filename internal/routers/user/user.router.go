@@ -19,7 +19,7 @@ func (pr *UserRouter) InitUserRouter(Router *gin.RouterGroup) {
 	userController, _ := wire.InitUserRouterHanlder()
 	userRouterPublic := Router.Group("/user")
 	{
-		userRouterPublic.GET("/regiser", userController.Register)
+		userRouterPublic.POST("/register", userController.Register)
 	}
 
 	userRouterPrivate := Router.Group("/user")

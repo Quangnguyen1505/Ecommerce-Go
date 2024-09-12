@@ -1,8 +1,11 @@
 package controller
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/ntquang/ecommerce/internal/services"
+	"github.com/ntquang/ecommerce/internal/vo"
 	"github.com/ntquang/ecommerce/response"
 )
 
@@ -44,6 +47,11 @@ func NewUserController(
 }
 
 func (uc *UserController) Register(c *gin.Context) {
-	result := uc.userService.Register("", "")
+	var params vo.UserRegistrationRequest
+	if err := c.ShouldBindJSON(&params); err != nil {
+		response.ErrorResponse(c, response.ErrCodeParamInvalid, "Invalid request")
+	}
+	fmt.Printf("Email params::\n%v", params.Email)
+	result := uc.userService.Register(params.Email, params.Purpose)
 	response.SuccessResponse(c, result, nil)
 }

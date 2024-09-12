@@ -1,5 +1,10 @@
 package repo
 
+import (
+	"github.com/ntquang/ecommerce/global"
+	"github.com/ntquang/ecommerce/internal/model"
+)
+
 // type UserRepo struct{}
 
 // func NewUserRepo() *UserRepo {
@@ -19,7 +24,8 @@ type userRepository struct {
 
 func (ur *userRepository) GetUserByEmail(email string) bool {
 	// Implement the GetUserByEmail method here
-	return false
+	row := global.Pdb.Table("go_crm_user").Where("usr_email = ?", email).First(&model.GoCrmUser{}).RowsAffected
+	return row != NumberNull
 }
 
 func NewUserRepository() IUserRepository {

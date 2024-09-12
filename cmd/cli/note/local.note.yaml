@@ -3,10 +3,10 @@ server:
   mode: "dev"
 postgresql:
   username: postgres
-  password: 123456789@
-  host: localhost
+  password: 1234567891@
+  host: postgres_container
   port: 5432
-  dbname : shopdevgo
+  dbname : shopdevgov2
   maxIdleConns: 10
   maxOpenConns: 100
   connMaxLifeTime: 3600
@@ -21,7 +21,7 @@ logger:
   compress:   true
   loglevel:  debug
 redis:
-  host: localhost
+  host: redis_container
   port: 6379
   password: 
   db: 0
