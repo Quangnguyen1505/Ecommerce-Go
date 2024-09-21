@@ -1,1 +1,8 @@
 pg_dump -U postgres -h localhost -d shopdevgo > d:\Golang-Project\github.com\ntquang\ecommerce\migrations\shopdevgo.sql
+
+
+//goose generate 
+goose -dir sql/schema create pre_go_crm_user_c sql
+
+// generate method use sqlc 
+sqlc generate

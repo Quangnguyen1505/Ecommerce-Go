@@ -9,7 +9,8 @@ import (
 func Run() {
 	InitConfig()
 	InitLogger()
-	InitPostgresql()
+	// InitPostgresql()
+	InitPostgresqlC()
 	InitRedis()
 	Initrouter()
 	r := Initrouter()
