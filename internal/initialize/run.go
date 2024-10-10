@@ -11,6 +11,7 @@ func Run() {
 	InitLogger()
 	// InitPostgresql()
 	InitPostgresqlC()
+	InitServiceInterface()
 	InitRedis()
 	Initrouter()
 	r := Initrouter()

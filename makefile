@@ -7,11 +7,14 @@ dev:
 	go run ${PATH_RUN}
 run:
 	docker-compose up -d && go run ${PATH_RUN}
-up:
+docker_build:
+	docker-compose up -d --build
+	docker-compose ps
+docker_up:
 	docker-compose up -d
-down:
+docker_down:
 	docker-compose down
-kill:
+docker_kill:
 	docker-compose kill
 
 upGoose:
@@ -23,5 +26,8 @@ downGoose:
 resetGoose:
 	set "GOOSE_DRIVER=${GOOSE_DRIVER}" && set "GOOSE_DBSTRING=${GOOSE_DBSTRING}" && goose -dir ${GOOSE_MIGRATION_DIR} reset
 
-.PHONY: run up down kill
+sqlgen:
+	sqlc generate
+
+.PHONY: run docker_build docker_up docker_down docker_kill
 .PHONY: upGoose downGoose resetGoose

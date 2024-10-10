@@ -8,6 +8,14 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type QuangTestV1Goose struct {
+	ID        int64
+	Name      string
+	Age       int32
+	Sex       int32
+	CreatedAt pgtype.Timestamp
+}
+
 type UserV1Goose struct {
 	ID        int64
 	Name      string

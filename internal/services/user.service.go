@@ -57,7 +57,7 @@ func (us *userService) Register(email string, purpose string) int {
 	// 6. User spam
 
 	// 1. check email exists
-	if us.userRepo.GetUserByEmail(email) {
+	if !us.userRepo.GetUserByEmail(email) {
 		return response.ErrEmailAlreadyExists
 	}
 
