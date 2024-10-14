@@ -8,18 +8,26 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-type QuangTestV1Goose struct {
-	ID        int64
-	Name      string
-	Age       int32
-	Sex       int32
-	CreatedAt pgtype.Timestamp
+type PreGoAccUserBase9999 struct {
+	UserID         int32
+	UserAccount    string
+	UserPassword   string
+	UserSalt       string
+	UserLoginTime  pgtype.Timestamp
+	UserLogoutTime pgtype.Timestamp
+	UserLoginIp    pgtype.Text
+	UserCreatedAt  pgtype.Timestamp
+	UserUpdatedAt  pgtype.Timestamp
 }
 
-type UserV1Goose struct {
-	ID        int64
-	Name      string
-	Age       int32
-	Sex       int32
-	CreatedAt pgtype.Timestamp
+type PreGoAccUserVerify9999 struct {
+	VerifyID        int32
+	VerifyOtp       string
+	VerifyKey       string
+	VerifyKeyHash   string
+	VerifyType      pgtype.Int4
+	IsVerified      pgtype.Int4
+	IsDeleted       pgtype.Int4
+	VerifyCreatedAt pgtype.Timestamp
+	VerifyUpdatedAt pgtype.Timestamp
 }

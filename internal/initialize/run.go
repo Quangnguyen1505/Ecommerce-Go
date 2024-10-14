@@ -1,20 +1,17 @@
 package initialize
 
-import (
-	"fmt"
+import "github.com/gin-gonic/gin"
 
-	"github.com/ntquang/ecommerce/global"
-)
-
-func Run() {
+func Run() *gin.Engine {
 	InitConfig()
 	InitLogger()
 	// InitPostgresql()
 	InitPostgresqlC()
-	InitServiceInterface()
 	InitRedis()
+	InitServiceInterface()
 	Initrouter()
 	r := Initrouter()
-	port := fmt.Sprintf(":%v", global.Config.Server.Port)
-	r.Run(port)
+	// port := fmt.Sprintf(":%v", global.Config.Server.Port)
+	// r.Run(port)
+	return r
 }

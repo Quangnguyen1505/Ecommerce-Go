@@ -3,7 +3,6 @@ package user
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/ntquang/ecommerce/internal/controller/account"
-	"github.com/ntquang/ecommerce/internal/wire"
 )
 
 type UserRouter struct{}
@@ -17,10 +16,12 @@ func (pr *UserRouter) InitUserRouter(Router *gin.RouterGroup) {
 
 	//WIRE 	go
 	//Denpendency Injection
-	userController, _ := wire.InitUserRouterHanlder()
+	// userController, _ := wire.InitUserRouterHanlder()
 	userRouterPublic := Router.Group("/user")
 	{
-		userRouterPublic.POST("/register", userController.Register)
+		// userRouterPublic.POST("/register", userController.Register)
+		userRouterPublic.POST("/register", account.Login.Register)
+		userRouterPublic.POST("/verifyOTP", account.Login.VerifyOTP)
 		userRouterPublic.POST("/login", account.Login.Login)
 	}
 

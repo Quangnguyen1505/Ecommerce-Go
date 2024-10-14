@@ -30,7 +30,7 @@ func InitPostgresqlC() {
 	global.Logger.Info("initialization PostgresqlC Successfully!")
 
 	global.Pdbc = db
-	defer db.Close(ctx)
+	// defer db.Close(ctx)
 	//set pool
 	// SetPoolC()
 	// genDbs()

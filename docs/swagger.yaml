@@ -1,0 +1,127 @@
+basePath: /v1/2024
+definitions:
+  model.RegisterInput:
+    properties:
+      verify_key:
+        type: string
+      verify_purpose:
+        type: string
+      verify_type:
+        type: integer
+    type: object
+  model.VerifyInput:
+    properties:
+      verify_code:
+        type: string
+      verify_key:
+        type: string
+    type: object
+  response.ErrResponse:
+    properties:
+      code:
+        type: integer
+      detail: {}
+      messgae:
+        type: string
+    type: object
+  response.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      messgae:
+        type: string
+    type: object
+host: localhost:8081
+info:
+  contact:
+    email: quang0706r@gmail.com
+    name: TEAM QUANG
+    url: https://github.com/Quangnguyen1505/Ecommerce-Go
+  description: This is a server ecommerce.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://github.com/Quangnguyen1505/Ecommerce-Go
+  title: Demo API Ecommerce
+  version: 1.0.0
+paths:
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: When user is login save dbs
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.RegisterInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrResponse'
+      summary: User Login
+      tags:
+      - account manager
+  /user/register:
+    post:
+      consumes:
+      - application/json
+      description: When user is registered send otp to email
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.RegisterInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrResponse'
+      summary: User Registrasion
+      tags:
+      - account manager
+  /user/verifyOTP:
+    post:
+      consumes:
+      - application/json
+      description: When user is register after verify otp
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.VerifyInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrResponse'
+      summary: User Verify OTP
+      tags:
+      - account manager
+swagger: "2.0"

@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/ntquang/ecommerce/response"
 )
 
 func Authentication() gin.HandlerFunc {
@@ -10,7 +9,7 @@ func Authentication() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
 		if token == "" {
-			response.ErrorResponse(c, response.ErrTokenHeadersInvalid, "")
+			// response.ErrorResponse(c, response.ErrTokenHeadersInvalid, "", )
 			c.Abort()
 			return
 		}

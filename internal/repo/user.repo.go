@@ -26,11 +26,11 @@ type userRepository struct {
 func (ur *userRepository) GetUserByEmail(email string) bool {
 	// Implement the GetUserByEmail method here
 	// row := global.Pdb.Table("go_crm_user").Where("usr_email = ?", email).First(&model.GoCrmUser{}).RowsAffected
-	user, err := ur.sqlc.GetUserByEmail(ctx, email)
-	if err != nil {
-		return true
-	}
-	return user.ID != 0
+	// user, err := ur.sqlc.GetUserByEmail(ctx, email)
+	// if err != nil {
+	// 	return true
+	// }
+	return 1 != 0
 }
 
 func NewUserRepository() IUserRepository {

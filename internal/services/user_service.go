@@ -1,12 +1,16 @@
 package services
 
-import "context"
+import (
+	"context"
+
+	"github.com/ntquang/ecommerce/internal/model"
+)
 
 type (
 	IUserLogin interface {
 		Login(ctx context.Context) error
-		Register(ctx context.Context) error
-		VerifyOtp(ctx context.Context) error
+		Register(ctx context.Context, in *model.RegisterInput) (resultCode int, err error)
+		VerifyOtp(ctx context.Context, in *model.VerifyInput) (out model.VerifyOTPOutput, err error)
 		UpdatePaswordRegister(ctx context.Context) error
 	}
 

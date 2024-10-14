@@ -49,7 +49,7 @@ func NewUserController(
 func (uc *UserController) Register(c *gin.Context) {
 	var params vo.UserRegistrationRequest
 	if err := c.ShouldBindJSON(&params); err != nil {
-		response.ErrorResponse(c, response.ErrCodeParamInvalid, "Invalid request")
+		response.ErrorResponse(c, response.ErrCodeParamInvalid, err.Error())
 	}
 	fmt.Printf("Email params::\n%v", params.Email)
 	result := uc.userService.Register(params.Email, params.Purpose)
