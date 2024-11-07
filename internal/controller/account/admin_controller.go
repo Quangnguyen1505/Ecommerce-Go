@@ -13,5 +13,5 @@ type cUserAdmin struct{}
 func (c *cUserAdmin) RemoveUser(ctx *gin.Context) {
 	result := services.UserAdmin().RemoveUser(ctx)
 
-	response.SuccessResponse(ctx, response.ErrCodeRemoveSuccess, result)
+	response.SuccessResponse(ctx, response.ErrCodeRemoveSuccess, result, "")
 }

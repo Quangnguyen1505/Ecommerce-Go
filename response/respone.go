@@ -18,18 +18,24 @@ type ErrResponse struct {
 	Detail  interface{} `json:"detail"`
 }
 
-func SuccessResponse(c *gin.Context, code int, data interface{}) {
+func SuccessResponse(c *gin.Context, code int, data interface{}, message string) {
+	if message == "" {
+		message = msg[code]
+	}
 	c.JSON(http.StatusOK, Response{
 		Code:    code,
-		Message: msg[code],
+		Message: message,
 		Data:    data,
 	})
 }
 
-func ErrorResponse(c *gin.Context, code int, err string) {
+func ErrorResponse(c *gin.Context, code int, message string, err error) {
+	if message == "" {
+		message = msg[code]
+	}
 	c.JSON(http.StatusOK, ErrResponse{
 		Code:    code,
-		Message: msg[code],
+		Message: message,
 		Detail:  err,
 	})
 }

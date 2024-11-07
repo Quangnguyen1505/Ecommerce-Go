@@ -114,6 +114,7 @@ func (s *sUserLogin) Register(ctx context.Context, in *model.RegisterInput) (res
 		return response.ErrInvalidOtp, err
 	}
 
+	//6 method register
 	switch in.VerifyType {
 	case consts.EMAIL:
 		err = sendto.SendTextEmailOtp([]string{in.VerifyKey}, consts.EMAIL_SEND, strconv.Itoa(otpNew))
@@ -187,7 +188,7 @@ func (s *sUserLogin) UpdatePaswordRegister(ctx context.Context, token string, pa
 
 	//update userBase table
 	userBase := database.AddUserBaseParams{}
-	userBase.UserAccount = InfoOTP.VerifyOtp
+	userBase.UserAccount = InfoOTP.VerifyKey
 	userSalt, err := crypto.GenerateSalt(16)
 	if err != nil {
 		return response.ErrCodeOtpNotExists, err

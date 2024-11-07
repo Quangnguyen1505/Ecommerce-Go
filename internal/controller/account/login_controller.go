@@ -28,18 +28,16 @@ type cUserLogin struct{}
 func (c *cUserLogin) Login(ctx *gin.Context) {
 	//implement login for register
 	var params model.LoginInput
-	fmt.Println("u:p", params)
 	if err := ctx.ShouldBindJSON(&params); err != nil {
-		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, err.Error())
+		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, "params invalid", fmt.Errorf(err.Error()))
 	}
 	statusCode, metadata, err := services.UserLogin().Login(ctx, &params)
 	if err != nil {
-		global.Logger.Error("Error login user", zap.Error(err))
-		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, err.Error())
+		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, "Error login user", fmt.Errorf(err.Error()))
 		return
 	}
 
-	response.SuccessResponse(ctx, statusCode, metadata)
+	response.SuccessResponse(ctx, statusCode, metadata, "login successfully!")
 }
 
 // User Registrasion Documentation
@@ -57,16 +55,16 @@ func (c *cUserLogin) Register(ctx *gin.Context) {
 	var params model.RegisterInput
 	fmt.Println("u:p", params)
 	if err := ctx.ShouldBindJSON(&params); err != nil {
-		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, err.Error())
+		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, "", fmt.Errorf(err.Error()))
 	}
 	statusCode, err := services.UserLogin().Register(ctx, &params)
 	if err != nil {
 		global.Logger.Error("Error registering user OTP", zap.Error(err))
-		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, err.Error())
+		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, "", fmt.Errorf(err.Error()))
 		return
 	}
 
-	response.SuccessResponse(ctx, statusCode, nil)
+	response.SuccessResponse(ctx, statusCode, nil, "register successfully!")
 }
 
 // User Verify OTP Documentation
@@ -82,15 +80,15 @@ func (c *cUserLogin) Register(ctx *gin.Context) {
 func (c *cUserLogin) VerifyOTP(ctx *gin.Context) {
 	var params model.VerifyInput
 	if err := ctx.ShouldBindJSON(&params); err != nil {
-		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, err.Error())
+		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, "", fmt.Errorf(err.Error()))
 	}
 	result, err := services.UserLogin().VerifyOtp(ctx, &params)
 	if err != nil {
 		global.Logger.Error("Error verify user OTP", zap.Error(err))
-		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, err.Error())
+		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, "", fmt.Errorf(err.Error()))
 		return
 	}
-	response.SuccessResponse(ctx, response.ErrCodeSuccess, result)
+	response.SuccessResponse(ctx, response.ErrCodeSuccess, result, "verify otp successfully!")
 }
 
 // User Verify OTP Documentation
@@ -106,13 +104,13 @@ func (c *cUserLogin) VerifyOTP(ctx *gin.Context) {
 func (c *cUserLogin) UpdatePasswordRegister(ctx *gin.Context) {
 	var params model.UpdatePasswordInput
 	if err := ctx.ShouldBindJSON(&params); err != nil {
-		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, err.Error())
+		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, "", fmt.Errorf(err.Error()))
 	}
 	userId, err := services.UserLogin().UpdatePaswordRegister(ctx, params.Token, params.Password)
 	if err != nil {
 		global.Logger.Error("Error update password", zap.Error(err))
-		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, err.Error())
+		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, "", fmt.Errorf(err.Error()))
 		return
 	}
-	response.SuccessResponse(ctx, response.ErrCodeSuccess, userId)
+	response.SuccessResponse(ctx, response.ErrCodeSuccess, userId, "update password successfully")
 }
