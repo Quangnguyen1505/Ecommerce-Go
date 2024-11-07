@@ -8,7 +8,6 @@ package database
 import (
 	"context"
 
-	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -60,7 +59,7 @@ func (q *Queries) GetValidOtp(ctx context.Context, verifyKeyHash string) (GetVal
 	return i, err
 }
 
-const insertOtpVerify = `-- name: InsertOtpVerify :execresult
+const insertOtpVerify = `-- name: InsertOtpVerify :one
 INSERT INTO pre_go_acc_user_verify_9999 (
   verify_otp, 
   verify_key, 
@@ -83,13 +82,16 @@ type InsertOtpVerifyParams struct {
 	VerifyType    pgtype.Int4
 }
 
-func (q *Queries) InsertOtpVerify(ctx context.Context, arg InsertOtpVerifyParams) (pgconn.CommandTag, error) {
-	return q.db.Exec(ctx, insertOtpVerify,
+func (q *Queries) InsertOtpVerify(ctx context.Context, arg InsertOtpVerifyParams) (int32, error) {
+	row := q.db.QueryRow(ctx, insertOtpVerify,
 		arg.VerifyOtp,
 		arg.VerifyKey,
 		arg.VerifyKeyHash,
 		arg.VerifyType,
 	)
+	var verify_id int32
+	err := row.Scan(&verify_id)
+	return verify_id, err
 }
 
 const updateUserValificationStatus = `-- name: UpdateUserValificationStatus :exec

@@ -12,6 +12,11 @@ const (
 
 	ErrCodeUserHasExists = 60002
 	ErrCodeOtpNotExists  = 60003
+	ErrCodeOtpNotVerify  = 60004
+
+	// authentication
+	ErrCodeUserNotRegister = 60006
+	ErrCodeAuthenError     = 60005
 )
 
 var msg = map[int]string{
@@ -24,4 +29,7 @@ var msg = map[int]string{
 	ErrCodeRemoveSuccess:   "test successful",
 	ErrCodeUserHasExists:   "key user already exists",
 	ErrCodeOtpNotExists:    "OTP exists but not registered",
+	ErrCodeOtpNotVerify:    "OTP exist but not verifyed",
+	ErrCodeAuthenError:     "Authentication error",
+	ErrCodeUserNotRegister: "User don't exists",
 }

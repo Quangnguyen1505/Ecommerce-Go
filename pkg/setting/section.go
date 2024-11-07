@@ -6,6 +6,7 @@ type Config struct {
 	Logger     LoggerSettings     `mapstructure:"logger"`
 	Redis      RedisSettings      `mapstructure:"redis"`
 	Server     ServerSettings     `mapstructure:"server"`
+	JWT        JWTSettings        `mapstructure:"jwt"`
 }
 
 type ServerSettings struct {
@@ -45,4 +46,10 @@ type LoggerSettings struct {
 	Max_age     int    `mapstructure:"max_age"`
 	Compress    bool   `mapstructure:"compress"`
 	Loglevel    string `mapstructure:"loglevel"`
+}
+
+type JWTSettings struct {
+	TOKEN_HOUR_LIFESPAN uint   `mapstructure:"TOKEN_HOUR_LIFESPAN"`
+	JWT_EXPIRATION      string `mapstructure:"JWT_EXPIRATION"`
+	API_SERCERT_KEY     string `mapstructure:"API_SERCERT_KEY"`
 }

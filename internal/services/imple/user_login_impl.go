@@ -2,6 +2,7 @@ package imple
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -13,6 +14,7 @@ import (
 	"github.com/ntquang/ecommerce/internal/database"
 	"github.com/ntquang/ecommerce/internal/model"
 	"github.com/ntquang/ecommerce/internal/utlis"
+	"github.com/ntquang/ecommerce/internal/utlis/auth"
 	"github.com/ntquang/ecommerce/internal/utlis/crypto"
 	"github.com/ntquang/ecommerce/internal/utlis/random"
 	"github.com/ntquang/ecommerce/internal/utlis/sendto"
@@ -33,9 +35,38 @@ func NewUserLoginImpl(r *database.Queries) *sUserLogin {
 
 // implement the IUserLogin interface here
 
-func (s *sUserLogin) Login(ctx context.Context) error {
-	fmt.Println("login already work")
-	return nil
+func (s *sUserLogin) Login(ctx context.Context, in *model.LoginInput) (resultCode int, out model.LoginOutput, err error) {
+	///1. check user in model user base
+	userBase, err := s.r.GetOneUserInfo(ctx, in.Account)
+	if err != nil {
+		return response.ErrCodeUserNotRegister, out, err
+	}
+	// 2. check match password
+	if !crypto.MatchingPassword(in.Password, userBase.UserSalt, userBase.UserPassword) {
+		return response.ErrCodeUserNotRegister, out, err
+	}
+	//3. update password in user base (time, ip, ...)
+	go s.r.LoginUserBase(ctx, database.LoginUserBaseParams{
+		UserLoginIp:  pgtype.Text{String: "172.0.0.1", Valid: true},
+		UserAccount:  in.Account,
+		UserPassword: in.Password,
+	})
+	//4. create uuid
+	newUUID := utlis.GenerateCliTokenUUID(int(userBase.UserID))
+	//5. get user info
+	userInfo, err := s.r.GetUser(ctx, int64(userBase.UserID))
+	if err != nil {
+		return response.ErrCodeUserNotRegister, out, err
+	}
+	//6. convert user info to json and save userinfo in redis as uuid
+	UserInfoJson, err := json.Marshal(userInfo)
+	err = global.Redis.Set(ctx, newUUID, UserInfoJson, time.Duration(consts.TIME_OTP_REGISTER)*time.Minute).Err()
+	//7. create token
+	out.Token, err = auth.CreateToken(newUUID)
+	if err != nil {
+		return
+	}
+	return 200, out, err
 }
 
 func (s *sUserLogin) Register(ctx context.Context, in *model.RegisterInput) (resultCode int, err error) {
@@ -101,6 +132,7 @@ func (s *sUserLogin) Register(ctx context.Context, in *model.RegisterInput) (res
 		}
 		//8. getlastId when have function work need last ID
 		// lastIdVerifyUser, err := result.
+
 		fmt.Println("lastId ::", result)
 		return response.ErrCodeSuccess, nil
 	case consts.MOBILE:
@@ -139,10 +171,49 @@ func (s *sUserLogin) VerifyOtp(ctx context.Context, in *model.VerifyInput) (out 
 
 	out.Token = infoOTP.VerifyKeyHash
 	out.Message = "Verify OTP successfull"
-
 	return out, err
 }
 
-func (s *sUserLogin) UpdatePaswordRegister(ctx context.Context) error {
-	return nil
+func (s *sUserLogin) UpdatePaswordRegister(ctx context.Context, token string, password string) (userId int, err error) {
+	// 1. check token exists in dbs
+	InfoOTP, err := s.r.GetInfoOtp(ctx, token)
+	if err != nil {
+		return response.ErrCodeOtpNotExists, err
+	}
+	// 2. check OTP already verify ?
+	if InfoOTP.IsVerified.Int32 == 0 {
+		return response.ErrCodeOtpNotVerify, err
+	}
+
+	//update userBase table
+	userBase := database.AddUserBaseParams{}
+	userBase.UserAccount = InfoOTP.VerifyOtp
+	userSalt, err := crypto.GenerateSalt(16)
+	if err != nil {
+		return response.ErrCodeOtpNotExists, err
+	}
+	userBase.UserSalt = userSalt
+	userBase.UserPassword = crypto.HashPassword(password, userSalt)
+	//add user Base to table
+	newUserBase, err := s.r.AddUserBase(ctx, userBase)
+	if err != nil {
+		return response.ErrCodeOtpNotExists, err
+	}
+	fmt.Println("user Id::", newUserBase)
+	//add user_id to unserInfo
+	newUserInfo, err := s.r.AddUserHaveUserId(ctx, database.AddUserHaveUserIdParams{
+		UserID:       int64(newUserBase),
+		UserAccount:  InfoOTP.VerifyKey,
+		UserNickname: pgtype.Text{String: "", Valid: true},
+		UserAvatar:   pgtype.Text{String: "", Valid: true},
+		UserState:    1,
+		UserMobile:   pgtype.Text{String: "", Valid: true},
+		UserGender:   pgtype.Int2{Int16: 0, Valid: true},
+		UserBirthday: pgtype.Date{Time: time.Time{}, Valid: false},
+		UserEmail:    pgtype.Text{String: InfoOTP.VerifyKey, Valid: true},
+	})
+	if err != nil {
+		return response.ErrCodeOtpNotExists, err
+	}
+	return int(newUserInfo), nil
 }

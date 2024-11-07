@@ -1,5 +1,12 @@
 basePath: /v1/2024
 definitions:
+  model.LoginInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
   model.RegisterInput:
     properties:
       verify_key:
@@ -8,6 +15,13 @@ definitions:
         type: string
       verify_type:
         type: integer
+    type: object
+  model.UpdatePasswordInput:
+    properties:
+      password:
+        type: string
+      token:
+        type: string
     type: object
   model.VerifyInput:
     properties:
@@ -57,7 +71,7 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/model.RegisterInput'
+          $ref: '#/definitions/model.LoginInput'
       produces:
       - application/json
       responses:
@@ -96,6 +110,32 @@ paths:
           schema:
             $ref: '#/definitions/response.ErrResponse'
       summary: User Registrasion
+      tags:
+      - account manager
+  /user/updatePass:
+    post:
+      consumes:
+      - application/json
+      description: When user is VerifyOTP ok after Update Password
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdatePasswordInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrResponse'
+      summary: User Update Password
       tags:
       - account manager
   /user/verifyOTP:

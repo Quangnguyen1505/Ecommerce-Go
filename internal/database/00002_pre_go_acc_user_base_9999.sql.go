@@ -8,17 +8,17 @@ package database
 import (
 	"context"
 
-	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-const addUserBase = `-- name: AddUserBase :execresult
+const addUserBase = `-- name: AddUserBase :one
 INSERT INTO pre_go_acc_user_base_9999 (
     user_account, user_password, user_salt, user_created_at, user_updated_at 
 ) 
 VALUES (
     $1, $2, $3, NOW(), NOW()
 )
+RETURNING user_id
 `
 
 type AddUserBaseParams struct {
@@ -27,8 +27,11 @@ type AddUserBaseParams struct {
 	UserSalt     string
 }
 
-func (q *Queries) AddUserBase(ctx context.Context, arg AddUserBaseParams) (pgconn.CommandTag, error) {
-	return q.db.Exec(ctx, addUserBase, arg.UserAccount, arg.UserPassword, arg.UserSalt)
+func (q *Queries) AddUserBase(ctx context.Context, arg AddUserBaseParams) (int32, error) {
+	row := q.db.QueryRow(ctx, addUserBase, arg.UserAccount, arg.UserPassword, arg.UserSalt)
+	var user_id int32
+	err := row.Scan(&user_id)
+	return user_id, err
 }
 
 const checkUserBaseExists = `-- name: CheckUserBaseExists :one
@@ -104,19 +107,20 @@ func (q *Queries) GetOneUserInfoAdmin(ctx context.Context, userAccount string) (
 const loginUserBase = `-- name: LoginUserBase :exec
 UPDATE pre_go_acc_user_base_9999 
     SET user_login_time = NOW(), 
-    user_login_ip = $2
+    user_login_ip = $3
 WHERE user_account = $1 AND user_password = $2
 RETURNING 
     user_id
 `
 
 type LoginUserBaseParams struct {
-	UserAccount string
-	UserLoginIp pgtype.Text
+	UserAccount  string
+	UserPassword string
+	UserLoginIp  pgtype.Text
 }
 
 func (q *Queries) LoginUserBase(ctx context.Context, arg LoginUserBaseParams) error {
-	_, err := q.db.Exec(ctx, loginUserBase, arg.UserAccount, arg.UserLoginIp)
+	_, err := q.db.Exec(ctx, loginUserBase, arg.UserAccount, arg.UserPassword, arg.UserLoginIp)
 	return err
 }
 

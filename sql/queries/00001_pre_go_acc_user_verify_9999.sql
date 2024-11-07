@@ -10,7 +10,7 @@ UPDATE pre_go_acc_user_verify_9999
   verify_updated_at = now()
 WHERE verify_key_hash = $1;
 
--- name: InsertOtpVerify :execresult
+-- name: InsertOtpVerify :one
 INSERT INTO pre_go_acc_user_verify_9999 (
   verify_otp, 
   verify_key, 

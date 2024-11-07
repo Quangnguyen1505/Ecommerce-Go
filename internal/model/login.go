@@ -16,3 +16,19 @@ type VerifyOTPOutput struct {
 	UserId  string `json:"user_id"`
 	Message string `json:"message"`
 }
+
+type UpdatePasswordInput struct {
+	Password string `json:"password"`
+	Token    string `json:"token"`
+}
+
+type LoginInput struct {
+	Account  string `json:"email"`
+	Password string `json:"password"`
+}
+
+type LoginOutput struct {
+	Token   string `json:"token"`
+	Message string `json:"message"`
+	UserId  string `json:"user_id"`
+}

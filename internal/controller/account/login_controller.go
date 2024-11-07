@@ -1,6 +1,8 @@
 package account
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/ntquang/ecommerce/global"
 	"github.com/ntquang/ecommerce/internal/model"
@@ -19,18 +21,25 @@ type cUserLogin struct{}
 // @Tags         account manager
 // @Accept       json
 // @Produce      json
-// @Param        payload body model.RegisterInput true "payload"
+// @Param        payload body model.LoginInput true "payload"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.ErrResponse
 // @Router       /user/login [post]
 func (c *cUserLogin) Login(ctx *gin.Context) {
-	//implement login for login
-	err := services.UserLogin().Login(ctx)
+	//implement login for register
+	var params model.LoginInput
+	fmt.Println("u:p", params)
+	if err := ctx.ShouldBindJSON(&params); err != nil {
+		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, err.Error())
+	}
+	statusCode, metadata, err := services.UserLogin().Login(ctx, &params)
 	if err != nil {
+		global.Logger.Error("Error login user", zap.Error(err))
 		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, err.Error())
 		return
 	}
-	response.SuccessResponse(ctx, response.ErrCodeSuccess, nil)
+
+	response.SuccessResponse(ctx, statusCode, metadata)
 }
 
 // User Registrasion Documentation
@@ -46,6 +55,7 @@ func (c *cUserLogin) Login(ctx *gin.Context) {
 func (c *cUserLogin) Register(ctx *gin.Context) {
 	//implement login for register
 	var params model.RegisterInput
+	fmt.Println("u:p", params)
 	if err := ctx.ShouldBindJSON(&params); err != nil {
 		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, err.Error())
 	}
@@ -81,4 +91,28 @@ func (c *cUserLogin) VerifyOTP(ctx *gin.Context) {
 		return
 	}
 	response.SuccessResponse(ctx, response.ErrCodeSuccess, result)
+}
+
+// User Verify OTP Documentation
+// @Summary      User Update Password
+// @Description  When user is VerifyOTP ok after Update Password
+// @Tags         account manager
+// @Accept       json
+// @Produce      json
+// @Param        payload body model.UpdatePasswordInput true "payload"
+// @Success      200  {object}  response.Response
+// @Failure      500  {object}  response.ErrResponse
+// @Router       /user/updatePass [post]
+func (c *cUserLogin) UpdatePasswordRegister(ctx *gin.Context) {
+	var params model.UpdatePasswordInput
+	if err := ctx.ShouldBindJSON(&params); err != nil {
+		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, err.Error())
+	}
+	userId, err := services.UserLogin().UpdatePaswordRegister(ctx, params.Token, params.Password)
+	if err != nil {
+		global.Logger.Error("Error update password", zap.Error(err))
+		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, err.Error())
+		return
+	}
+	response.SuccessResponse(ctx, response.ErrCodeSuccess, userId)
 }

@@ -20,6 +20,21 @@ type PreGoAccUserBase9999 struct {
 	UserUpdatedAt  pgtype.Timestamp
 }
 
+type PreGoAccUserInfo9999 struct {
+	UserID               int64
+	UserAccount          string
+	UserNickname         pgtype.Text
+	UserAvatar           pgtype.Text
+	UserState            int16
+	UserMobile           pgtype.Text
+	UserGender           pgtype.Int2
+	UserBirthday         pgtype.Date
+	UserEmail            pgtype.Text
+	UserIsAuthentication int16
+	CreatedAt            pgtype.Timestamp
+	UpdatedAt            pgtype.Timestamp
+}
+
 type PreGoAccUserVerify9999 struct {
 	VerifyID        int32
 	VerifyOtp       string

@@ -8,10 +8,10 @@ import (
 
 type (
 	IUserLogin interface {
-		Login(ctx context.Context) error
+		Login(ctx context.Context, in *model.LoginInput) (resultCode int, out model.LoginOutput, err error)
 		Register(ctx context.Context, in *model.RegisterInput) (resultCode int, err error)
 		VerifyOtp(ctx context.Context, in *model.VerifyInput) (out model.VerifyOTPOutput, err error)
-		UpdatePaswordRegister(ctx context.Context) error
+		UpdatePaswordRegister(ctx context.Context, token string, password string) (userId int, err error)
 	}
 
 	IUserInfo interface {
