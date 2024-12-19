@@ -28,7 +28,7 @@ type cUserLogin struct{}
 func (c *cUserLogin) Login(ctx *gin.Context) {
 	//implement login for register
 	var params model.LoginInput
-	if err := ctx.ShouldBindJSON(&params); err != nil {
+	if err := ctx.ShouldBindJSON(&params); err != nil { // convert JSON to Struct
 		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, "params invalid", fmt.Errorf(err.Error()))
 	}
 	statusCode, metadata, err := services.UserLogin().Login(ctx, &params)
@@ -53,10 +53,14 @@ func (c *cUserLogin) Login(ctx *gin.Context) {
 func (c *cUserLogin) Register(ctx *gin.Context) {
 	//implement login for register
 	var params model.RegisterInput
-	fmt.Println("u:p", params)
+	fmt.Println("so 1::", params)
 	if err := ctx.ShouldBindJSON(&params); err != nil {
+		fmt.Println("Lỗi bind JSON:", err)
+		global.Logger.Error("Error registering user OTP", zap.Error(err))
 		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, "", fmt.Errorf(err.Error()))
+		return
 	}
+	fmt.Println("so 2::", params)
 	statusCode, err := services.UserLogin().Register(ctx, &params)
 	if err != nil {
 		global.Logger.Error("Error registering user OTP", zap.Error(err))

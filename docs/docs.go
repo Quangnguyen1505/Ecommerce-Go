@@ -104,6 +104,53 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/two-factor/setup": {
+            "post": {
+                "description": "When user is login after 2 factor authentication",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "account 2fa"
+                ],
+                "summary": "User 2FA",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.SetupTwoFactorAuthInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/user/updatePass": {
             "post": {
                 "description": "When user is VerifyOTP ok after Update Password",
@@ -207,6 +254,20 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "verify_type": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.SetupTwoFactorAuthInput": {
+            "type": "object",
+            "properties": {
+                "two_factor_auth_type": {
+                    "type": "string"
+                },
+                "two_factor_email": {
+                    "type": "string"
+                },
+                "user_id": {
                     "type": "integer"
                 }
             }

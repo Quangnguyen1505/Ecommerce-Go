@@ -20,6 +20,7 @@ import (
 	"github.com/ntquang/ecommerce/internal/utlis/sendto"
 	"github.com/ntquang/ecommerce/response"
 	"github.com/redis/go-redis/v9"
+	"go.uber.org/zap"
 )
 
 type sUserLogin struct {
@@ -35,6 +36,41 @@ func NewUserLoginImpl(r *database.Queries) *sUserLogin {
 
 // implement the IUserLogin interface here
 
+// --- START TWO FACTOR AUTHENTICATION ---
+func (s *sUserLogin) IsTwoFactorEnabled(ctx context.Context, userId int) (resultCode int, rs bool, err error) {
+	return 200, true, nil
+}
+func (s *sUserLogin) SetupTwoFactorAuth(ctx context.Context, in *model.SetupTwoFactorAuthInput) (resultCode int, err error) {
+	// 1. check user enabled
+	isTwoFactorAuth, err := s.r.IsTwoFactorEnabled(ctx, int32(in.UserId))
+	if err != nil {
+		return response.ErrTwoFactorAuthSetUpFailed, err
+	}
+	if isTwoFactorAuth > 0 {
+		return response.ErrTwoFactorAuthSetUpFailed, fmt.Errorf("Two-factor authenticaion already enabled")
+	}
+	// 2. create new type Authen
+	err = s.r.EnableTwoFactorTypeEmail(ctx, database.EnableTwoFactorTypeEmailParams{
+		UserID:            int32(in.UserId),
+		TwoFactorAuthType: database.TwoFactorAuthTypeEnumEMAIL,
+		TwoFactorEmail:    pgtype.Text{String: in.TwoFactorEmail, Valid: true},
+	})
+	if err != nil {
+		return response.ErrTwoFactorAuthSetUpFailed, err
+	}
+	// 3. send otp to in.TwoFactorEmail
+	keyUserTwoFactor := crypto.GetHash("2fa:" + strconv.Itoa(int(in.UserId)))
+	fmt.Println("keyUserTwoFactor::", keyUserTwoFactor)
+	go global.Redis.Set(ctx, keyUserTwoFactor, "123456", time.Duration(consts.TIME_OTP_REGISTER)*time.Minute).Err()
+
+	return response.ErrCodeSuccess, nil
+}
+func (s *sUserLogin) VerifyTwoFactorAuth(ctx context.Context, in *model.TwoFactorVerifycationInput) (resultCode int, err error) {
+	return 200, nil
+}
+
+// --- END TWO FACTOR AUTHENTICATION ---
+
 func (s *sUserLogin) Login(ctx context.Context, in *model.LoginInput) (resultCode int, out model.LoginOutput, err error) {
 	///1. check user in model user base
 	userBase, err := s.r.GetOneUserInfo(ctx, in.Account)
@@ -45,23 +81,28 @@ func (s *sUserLogin) Login(ctx context.Context, in *model.LoginInput) (resultCod
 	if !crypto.MatchingPassword(in.Password, userBase.UserSalt, userBase.UserPassword) {
 		return response.ErrCodeUserNotRegister, out, err
 	}
-	//3. update password in user base (time, ip, ...)
+	// 3. check two-factor authentication
+
+	//4. update password in user base (time, ip, ...)
 	go s.r.LoginUserBase(ctx, database.LoginUserBaseParams{
 		UserLoginIp:  pgtype.Text{String: "172.0.0.1", Valid: true},
 		UserAccount:  in.Account,
 		UserPassword: in.Password,
 	})
-	//4. create uuid
+	//5. create uuid
 	newUUID := utlis.GenerateCliTokenUUID(int(userBase.UserID))
-	//5. get user info
+	fmt.Println("uuid::", newUUID)
+	//6. get user info
 	userInfo, err := s.r.GetUser(ctx, int64(userBase.UserID))
 	if err != nil {
+		global.Logger.Info("error::", zap.Error(err))
 		return response.ErrCodeUserNotRegister, out, err
 	}
-	//6. convert user info to json and save userinfo in redis as uuid
+	fmt.Println("userInfo::", userInfo)
+	// 7. convert user info to json and save userinfo in redis as uuid
 	UserInfoJson, err := json.Marshal(userInfo)
-	err = global.Redis.Set(ctx, newUUID, UserInfoJson, time.Duration(consts.TIME_OTP_REGISTER)*time.Minute).Err()
-	//7. create token
+	err = global.Redis.Set(ctx, newUUID, UserInfoJson, time.Duration(consts.TIME_2FA_LOGIN)*time.Minute).Err()
+	//8. create token
 	out.Token, err = auth.CreateToken(newUUID)
 	if err != nil {
 		return

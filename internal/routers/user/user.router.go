@@ -3,6 +3,7 @@ package user
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/ntquang/ecommerce/internal/controller/account"
+	"github.com/ntquang/ecommerce/internal/middleware"
 )
 
 type UserRouter struct{}
@@ -27,10 +28,12 @@ func (pr *UserRouter) InitUserRouter(Router *gin.RouterGroup) {
 	}
 
 	userRouterPrivate := Router.Group("/user")
+	userRouterPrivate.Use(middleware.Authentication())
 	// userRouterPrivate.Use(Limiter())
 	// userRouterPrivate.Use(Authen())
 	// userRouterPrivate.Use(Permission())
 	{
 		userRouterPrivate.GET("/info")
+		userRouterPrivate.POST("/two-factor/setup", account.User2fa.SetupTwoFactorAuth)
 	}
 }

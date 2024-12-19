@@ -10,7 +10,7 @@ RUN go build -o crm.shopdev.com ./cmd/server
 
 FROM scratch
 
-COPY ./configs  /configs
+COPY ./configs /configs
 
 COPY --from=builder /build/crm.shopdev.com /
 

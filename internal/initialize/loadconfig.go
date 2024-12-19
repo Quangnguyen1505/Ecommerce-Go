@@ -10,9 +10,12 @@ import (
 func InitConfig() {
 	viper := viper.New()
 	viper.AddConfigPath("./configs")
+	// if global.Config.Server.Mode == "dev" {
 	viper.SetConfigName("local")
+	// } else {
+	// 	viper.SetConfigName("production")
+	// }
 	viper.SetConfigType("yaml")
-
 	err := viper.ReadInConfig()
 	if err != nil {
 		panic(fmt.Errorf("failed to read configuration file: %w", err))

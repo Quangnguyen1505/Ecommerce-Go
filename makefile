@@ -1,6 +1,6 @@
 PATH_RUN=cmd/server/main.go
 GOOSE_DRIVER=postgres
-GOOSE_DBSTRING=user=postgres password=123456789@ dbname=shopdevgo
+GOOSE_DBSTRING=user=postgres password=1234567890 dbname=shopdevgov2
 GOOSE_MIGRATION_DIR=sql/schema
 
 dev:

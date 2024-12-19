@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
+	"fmt"
 )
 
 func GetHash(key string) string {
@@ -33,5 +34,6 @@ func HashPassword(password string, salt string) string {
 
 func MatchingPassword(password string, salt string, passwordDbs string) bool {
 	hashPassword := HashPassword(password, salt)
+	fmt.Println("hashPassword::", hashPassword)
 	return hashPassword == passwordDbs
 }

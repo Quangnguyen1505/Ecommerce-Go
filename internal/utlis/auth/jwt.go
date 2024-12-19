@@ -9,7 +9,7 @@ import (
 )
 
 type PayLoadClams struct {
-	jwt.MapClaims
+	jwt.RegisteredClaims
 }
 
 func generateTokenJWT(payload jwt.Claims) (string, error) {
@@ -29,14 +29,36 @@ func CreateToken(uuidToken string) (string, error) {
 		return "", err
 	}
 	now := time.Now()
-	expiresAt := now.Add(expiration)
+	expiresAt := jwt.NewNumericDate(now.Add(expiration))
 	return generateTokenJWT(&PayLoadClams{
-		MapClaims: jwt.MapClaims{
-			"sub": uuidToken,
-			"iss": "shopdevgo",
-			"jti": uuid.New().String(),
-			"exp": expiresAt,
-			"iat": time.Now().Unix(),
+		RegisteredClaims: jwt.RegisteredClaims{
+			Subject:   uuidToken,
+			Issuer:    "shopdevgo",
+			ID:        uuid.New().String(),
+			ExpiresAt: expiresAt,
+			IssuedAt:  jwt.NewNumericDate(now),
 		},
 	})
+}
+
+func ParseJwtTokenSubject(token string) (*jwt.RegisteredClaims, error) {
+	tokenClaims, err := jwt.ParseWithClaims(token, &jwt.RegisteredClaims{}, func(JwtToken *jwt.Token) (interface{}, error) {
+		return []byte(global.Config.JWT.API_SERCERT_KEY), nil
+	})
+	if tokenClaims != nil {
+		if claims, ok := tokenClaims.Claims.(*jwt.RegisteredClaims); ok && tokenClaims.Valid {
+			return claims, nil
+		}
+	}
+	return nil, err
+	// Parse the token with the correct claims type
+}
+
+// validate jwt token by subject
+func VerifyToken(token string) (*jwt.RegisteredClaims, error) {
+	claims, err := ParseJwtTokenSubject(token)
+	if err != nil {
+		return nil, err
+	}
+	return claims, nil
 }

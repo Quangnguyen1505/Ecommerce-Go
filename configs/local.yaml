@@ -3,10 +3,10 @@ server:
   mode: "dev"
 postgresql:
   username: postgres
-  password: 123456789@
+  password: "1234567890"
   host: localhost
   port: 5432
-  dbname : shopdevgo
+  dbname : shopdevgov2
   maxIdleConns: 10
   maxOpenConns: 100
   connMaxLifeTime: 3600
@@ -22,11 +22,11 @@ logger:
   loglevel:  debug
 redis:
   host: localhost
-  port: 6379
+  port: 6381
   password: 
   db: 0
   pool_size: 10
 jwt:
   TOKEN_HOUR_LIFESPAN: 1
   JWT_EXPIRATION: 1h
-  API_SERCERT_KEY: "aaa.bbb.ccc"
+  API_SERCERT_KEY: "abahbshbhzbxhzbxh@@#s"

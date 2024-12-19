@@ -5,13 +5,14 @@ services:
     container_name: postgres_container
     environment:
       POSTGRES_USER: "postgres" 
-      POSTGRES_PASSWORD: "1234567891@" 
+      POSTGRES_PASSWORD: "1234567890"
       POSTGRES_DB: "shopdevgov2" 
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    restart: always
+    networks:
+      - mynetwork
   redis:
     image: redis:7.0
     container_name: redis_container
@@ -19,18 +20,23 @@ services:
       - "6381:6379"
     volumes:
       - redis_data:/data
-    restart: always
+    networks:
+      - mynetwork
   app:
     container_name: go_backend_crm_shopdev
     build: 
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8009:8081"
-    restart: always
+      - "8081:8081"
+    networks:
+      - mynetwork
     depends_on: # postgres and redis start before app
       - postgres
       - redis
 volumes:
   postgres_data:
   redis_data:
+networks:
+  mynetwork:
+    driver: bridge
