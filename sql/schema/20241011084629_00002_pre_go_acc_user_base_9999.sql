@@ -1,11 +1,11 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE TABLE IF NOT EXISTS pre_go_acc_user_base_9999 (
+CREATE TABLE IF NOT EXISTS pre_go_acc_user_base_9999  (
     user_id SERIAL PRIMARY KEY,                    -- User ID
     user_account VARCHAR(255) NOT NULL,            -- User account (used to verify identity)
     user_password VARCHAR(255) NOT NULL,           -- User password
     user_salt VARCHAR(255) NOT NULL,               -- Salt used for password encryption
-
+    -- isTwoFactorEnabled
     user_login_time TIMESTAMP NULL DEFAULT NULL,   -- Last login time
     user_logout_time TIMESTAMP NULL DEFAULT NULL,  -- Last logout time
     user_login_ip VARCHAR(45) NULL,                -- Login IP address (45 characters to support IPv6)

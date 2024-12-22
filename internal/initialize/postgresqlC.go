@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/ntquang/ecommerce/global"
 	"github.com/ntquang/ecommerce/internal/model"
 	"go.uber.org/zap"
@@ -23,9 +23,11 @@ func InitPostgresqlC() {
 	ctx := context.Background()
 	m := global.Config.Postgresql
 	fmt.Println("m.Host, m.Username, m.Password, m.Dbname, m.Port::", m.Host, m.Username, m.Password, m.Dbname, m.Port)
-	dsn := "user=%s password=%s dbname=%s"
-	var s = fmt.Sprintf(dsn, m.Username, m.Password, m.Dbname)
-	db, err := pgx.Connect(ctx, s)
+	// dsn := "user=%s password=%s dbname=%s"
+	// var s = fmt.Sprintf(dsn, m.Username, m.Password, m.Dbname)
+	dsn := "user=%s password=%s dbname=%s host=%s port=%d sslmode=disable"
+	var s = fmt.Sprintf(dsn, m.Username, m.Password, m.Dbname, m.Host, m.Port)
+	db, err := pgxpool.New(ctx, s)
 	CheckErrorPanic(err, "InitPostgresqlC initialization error")
 	global.Logger.Info("initialization PostgresqlC Successfully!")
 

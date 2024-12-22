@@ -5,8 +5,54 @@
 package database
 
 import (
+	"database/sql/driver"
+	"fmt"
+
 	"github.com/jackc/pgx/v5/pgtype"
 )
+
+type TwoFactorAuthTypeEnum string
+
+const (
+	TwoFactorAuthTypeEnumSMS   TwoFactorAuthTypeEnum = "SMS"
+	TwoFactorAuthTypeEnumEMAIL TwoFactorAuthTypeEnum = "EMAIL"
+	TwoFactorAuthTypeEnumAPP   TwoFactorAuthTypeEnum = "APP"
+)
+
+func (e *TwoFactorAuthTypeEnum) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = TwoFactorAuthTypeEnum(s)
+	case string:
+		*e = TwoFactorAuthTypeEnum(s)
+	default:
+		return fmt.Errorf("unsupported scan type for TwoFactorAuthTypeEnum: %T", src)
+	}
+	return nil
+}
+
+type NullTwoFactorAuthTypeEnum struct {
+	TwoFactorAuthTypeEnum TwoFactorAuthTypeEnum
+	Valid                 bool // Valid is true if TwoFactorAuthTypeEnum is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullTwoFactorAuthTypeEnum) Scan(value interface{}) error {
+	if value == nil {
+		ns.TwoFactorAuthTypeEnum, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.TwoFactorAuthTypeEnum.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullTwoFactorAuthTypeEnum) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.TwoFactorAuthTypeEnum), nil
+}
 
 type PreGoAccUserBase9999 struct {
 	UserID         int32
@@ -18,6 +64,8 @@ type PreGoAccUserBase9999 struct {
 	UserLoginIp    pgtype.Text
 	UserCreatedAt  pgtype.Timestamp
 	UserUpdatedAt  pgtype.Timestamp
+	// Authentication is enabled for the user
+	IsTwoFactorEnabled pgtype.Bool
 }
 
 type PreGoAccUserInfo9999 struct {
@@ -33,6 +81,18 @@ type PreGoAccUserInfo9999 struct {
 	UserIsAuthentication int16
 	CreatedAt            pgtype.Timestamp
 	UpdatedAt            pgtype.Timestamp
+}
+
+type PreGoAccUserTwoFactor9999 struct {
+	TwoFactorID         int32
+	UserID              int32
+	TwoFactorAuthType   TwoFactorAuthTypeEnum
+	TwoFactorAuthSecret string
+	TwoFactorPhone      pgtype.Text
+	TwoFactorEmail      pgtype.Text
+	TwoFactorIsActive   bool
+	TwoFactorCreatedAt  pgtype.Timestamp
+	TwoFactorUpdatedAt  pgtype.Timestamp
 }
 
 type PreGoAccUserVerify9999 struct {

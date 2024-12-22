@@ -15,6 +15,7 @@ func Initrouter() *gin.Engine {
 	} else {
 		gin.SetMode(gin.ReleaseMode)
 		r = gin.New()
+		r.Use(gin.Logger(), gin.Recovery())
 	}
 
 	//middleware

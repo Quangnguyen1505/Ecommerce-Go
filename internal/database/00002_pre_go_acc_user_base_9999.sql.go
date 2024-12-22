@@ -87,9 +87,21 @@ FROM pre_go_acc_user_base_9999
 WHERE user_account = $1
 `
 
-func (q *Queries) GetOneUserInfoAdmin(ctx context.Context, userAccount string) (PreGoAccUserBase9999, error) {
+type GetOneUserInfoAdminRow struct {
+	UserID         int32
+	UserAccount    string
+	UserPassword   string
+	UserSalt       string
+	UserLoginTime  pgtype.Timestamp
+	UserLogoutTime pgtype.Timestamp
+	UserLoginIp    pgtype.Text
+	UserCreatedAt  pgtype.Timestamp
+	UserUpdatedAt  pgtype.Timestamp
+}
+
+func (q *Queries) GetOneUserInfoAdmin(ctx context.Context, userAccount string) (GetOneUserInfoAdminRow, error) {
 	row := q.db.QueryRow(ctx, getOneUserInfoAdmin, userAccount)
-	var i PreGoAccUserBase9999
+	var i GetOneUserInfoAdminRow
 	err := row.Scan(
 		&i.UserID,
 		&i.UserAccount,
