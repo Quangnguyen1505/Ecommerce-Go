@@ -22,18 +22,18 @@ services:
       - redis_data:/data
     networks:
       - mynetwork
-  app:
-    container_name: go_backend_crm_shopdev
-    build: 
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8081:8081"
-    networks:
-      - mynetwork
-    depends_on: # postgres and redis start before app
-      - postgres
-      - redis
+  # app:
+  #   container_name: go_backend_crm_shopdev
+  #   build: 
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8081:8081"
+  #   networks:
+  #     - mynetwork
+  #   depends_on: # postgres and redis start before app
+  #     - postgres
+  #     - redis
 volumes:
   postgres_data:
   redis_data:

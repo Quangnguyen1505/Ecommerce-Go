@@ -36,9 +36,9 @@ func Authentication() gin.HandlerFunc {
 			return
 		}
 
-		log.Println("Claims UUID:: ", claims.Subject) //11clitoken...
-		ctx := context.WithValue(c.Request.Context(), "subjectUUID", claims.Subject)
-		c.Request = c.Request.WithContext(ctx)
+		log.Println("Claims UUID:: ", claims.Subject)                                //11clitoken...
+		ctx := context.WithValue(c.Request.Context(), "subjectUUID", claims.Subject) // create new value in context
+		c.Request = c.Request.WithContext(ctx)                                       // create request new if conext update
 		c.Next()
 	}
 }

@@ -23,23 +23,25 @@ const (
 	ErrCodeRedisGetFailed = 70002
 
 	// Two Factor Authentication
-	ErrTwoFactorAuthSetUpFailed = 80002
+	ErrTwoFactorAuthSetUpFailed  = 80002
+	ErrTwoFactorAuthVerifyFailed = 80003
 )
 
 var msg = map[int]string{
-	ErrCodeSuccess:              "success",
-	ErrCodeParamInvalid:         "Email invalid",
-	ErrTokenHeadersInvalid:      "Token headers invalid",
-	ErrEmailAlreadyExists:       "Email Already exists",
-	ErrInvalidOtp:               "Error Otp",
-	ErrSendOtp:                  "Send Otp error",
-	ErrCodeRemoveSuccess:        "test successful",
-	ErrCodeUserHasExists:        "key user already exists",
-	ErrCodeOtpNotExists:         "OTP exists but not registered",
-	ErrCodeOtpNotVerify:         "OTP exist but not verifyed",
-	ErrCodeAuthenError:          "Authentication error",
-	ErrCodeUserNotRegister:      "User don't exists",
-	ErrCodeRedisSetFailed:       "Redis Set in RAM failed",
-	ErrCodeRedisGetFailed:       "Redis Get in RAM failed",
-	ErrTwoFactorAuthSetUpFailed: "Two factor authentication Error",
+	ErrCodeSuccess:               "success",
+	ErrCodeParamInvalid:          "Email invalid",
+	ErrTokenHeadersInvalid:       "Token headers invalid",
+	ErrEmailAlreadyExists:        "Email Already exists",
+	ErrInvalidOtp:                "Error Otp",
+	ErrSendOtp:                   "Send Otp error",
+	ErrCodeRemoveSuccess:         "test successful",
+	ErrCodeUserHasExists:         "key user already exists",
+	ErrCodeOtpNotExists:          "OTP exists but not registered",
+	ErrCodeOtpNotVerify:          "OTP exist but not verifyed",
+	ErrCodeAuthenError:           "Authentication error",
+	ErrCodeUserNotRegister:       "User don't exists",
+	ErrCodeRedisSetFailed:        "Redis Set in RAM failed",
+	ErrCodeRedisGetFailed:        "Redis Get in RAM failed",
+	ErrTwoFactorAuthSetUpFailed:  "Two factor authentication Error",
+	ErrTwoFactorAuthVerifyFailed: "Two factor authentication verify error",
 }
