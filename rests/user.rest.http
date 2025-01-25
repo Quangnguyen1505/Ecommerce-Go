@@ -1,4 +1,4 @@
-@base_url = http://localhost:8081/v1/2024
+@base_url = http://localhost:8082/v1/2024
 
 # Register
 ### Register a new user
@@ -6,7 +6,7 @@ POST {{base_url}}/user/register
 Content-Type: application/json
 
 {
-    "verify_key": "quang0706r@gmail.com",
+    "verify_key": "quang0706rr1@gmail.com",
     "verify_type": 1,
     "verify_purpose": "TEST_USER"
 }

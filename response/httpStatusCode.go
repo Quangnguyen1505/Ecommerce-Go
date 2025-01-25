@@ -25,6 +25,9 @@ const (
 	// Two Factor Authentication
 	ErrTwoFactorAuthSetUpFailed  = 80002
 	ErrTwoFactorAuthVerifyFailed = 80003
+
+	// Kafka
+	ErrKafaSendMessageFailed = 90001
 )
 
 var msg = map[int]string{
@@ -44,4 +47,5 @@ var msg = map[int]string{
 	ErrCodeRedisGetFailed:        "Redis Get in RAM failed",
 	ErrTwoFactorAuthSetUpFailed:  "Two factor authentication Error",
 	ErrTwoFactorAuthVerifyFailed: "Two factor authentication verify error",
+	ErrKafaSendMessageFailed:     "Kafka send message error",
 }

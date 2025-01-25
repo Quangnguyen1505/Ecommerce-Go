@@ -9,6 +9,7 @@ func Run() *gin.Engine {
 	InitPostgresqlC()
 	InitRedis()
 	InitServiceInterface()
+	InitKafa()
 	// Initrouter()
 	r := Initrouter()
 	// port := fmt.Sprintf(":%v", global.Config.Server.Port)

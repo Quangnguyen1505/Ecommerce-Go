@@ -21,6 +21,7 @@ import (
 	"github.com/ntquang/ecommerce/internal/utlis/sendto"
 	"github.com/ntquang/ecommerce/response"
 	"github.com/redis/go-redis/v9"
+	"github.com/segmentio/kafka-go"
 	"go.uber.org/zap"
 )
 
@@ -230,9 +231,28 @@ func (s *sUserLogin) Register(ctx context.Context, in *model.RegisterInput) (res
 	//6 method register
 	switch in.VerifyType {
 	case consts.EMAIL:
-		err = sendto.SendTextEmailOtp([]string{in.VerifyKey}, consts.EMAIL_SEND, strconv.Itoa(otpNew))
+		// 6.1 sent otp use go
+		// err = sendto.SendTextEmailOtp([]string{in.VerifyKey}, consts.EMAIL_SEND, strconv.Itoa(otpNew))
+		// if err != nil {
+		// 	return response.ErrSendOtp, err
+		// }
+		// 6.2 send otp via kafka any service
+		body := make(map[string]interface{})
+		// khởi tạo và cấp phát bộ nhớ như new nhưng khác là chỉ cấp phát bộ nhớ nhưng không khởi tạo giá trị.
+		body["otp"] = otpNew
+		body["email"] = consts.EMAIL_SEND
+
+		bodyRequest, _ := json.Marshal(body)
+
+		message := kafka.Message{
+			Key:   []byte("oth-auth"),
+			Value: []byte(bodyRequest),
+			Time:  time.Now(),
+		}
+
+		err := global.KafkaProducer.WriteMessages(context.Background(), message)
 		if err != nil {
-			return response.ErrSendOtp, err
+			return response.ErrKafaSendMessageFailed, err
 		}
 		// 7. save OTP to Postgresql
 		result, err := s.r.InsertOtpVerify(ctx, database.InsertOtpVerifyParams{
