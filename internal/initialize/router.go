@@ -25,7 +25,7 @@ func Initrouter() *gin.Engine {
 
 	manageRouter := routers.RouterGroupApp.Manage
 	userRouter := routers.RouterGroupApp.User
-
+	oauth2Router := routers.RouterGroupApp.Oauth2
 	MainGroup := r.Group("/v1/2024")
 	{
 		MainGroup.GET("/checkStatus") //tracking monitor
@@ -37,6 +37,9 @@ func Initrouter() *gin.Engine {
 	{
 		manageRouter.InitAdminRouter(MainGroup)
 		manageRouter.InitUserRouter(MainGroup)
+	}
+	{
+		oauth2Router.InitOauth2Router(MainGroup)
 	}
 	return r
 }

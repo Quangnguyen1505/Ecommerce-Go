@@ -10,6 +10,7 @@ func Run() *gin.Engine {
 	InitRedis()
 	InitServiceInterface()
 	InitKafa()
+	InitOauth2()
 	// Initrouter()
 	r := Initrouter()
 	// port := fmt.Sprintf(":%v", global.Config.Server.Port)

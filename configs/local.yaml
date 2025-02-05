@@ -1,6 +1,7 @@
 server:
   port: 8082
   mode: "dev"
+  domainBe: "http://localhost:8082"
 postgresql:
   username: postgres
   password: "1234567890"
@@ -30,3 +31,6 @@ jwt:
   TOKEN_HOUR_LIFESPAN: 1
   JWT_EXPIRATION: 1h
   API_SERCERT_KEY: "abahbshbhzbxhzbxh@@#s"
+oauth2Google:
+  clientSecret: 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
+  clientId: 155058097353-r28lechgbim8gbkt5t3o8e476rb0v1up.apps.googleusercontent.com
