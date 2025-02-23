@@ -35,8 +35,10 @@ require (
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/markbates/goth v1.80.0 // indirect
 	github.com/pierrec/lz4/v4 v4.1.22 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/segmentio/kafka-go v0.4.47 // indirect
 	github.com/swaggo/swag v1.16.3 // indirect
+	github.com/ulule/limiter/v3 v3.11.2 // indirect
 	golang.org/x/oauth2 v0.26.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

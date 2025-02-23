@@ -3,6 +3,7 @@ package initialize
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/ntquang/ecommerce/global"
+	"github.com/ntquang/ecommerce/internal/middleware"
 	"github.com/ntquang/ecommerce/internal/routers"
 )
 
@@ -22,6 +23,27 @@ func Initrouter() *gin.Engine {
 	// r.Use() //logging
 	// r.Use() // cross
 	// r.Use() // limiter in global
+
+	r.Use(middleware.NewRateLimiter().GlobalRateLimiter())
+	r.GET("/ping/100", func(ctx *gin.Context) {
+		ctx.JSON(200, gin.H{
+			"message": "pong 100",
+		})
+	})
+
+	r.Use(middleware.NewRateLimiter().PublicAPIRateLimiter())
+	r.GET("/ping/80", func(ctx *gin.Context) {
+		ctx.JSON(200, gin.H{
+			"message": "pong 80",
+		})
+	})
+
+	r.Use(middleware.NewRateLimiter().UserPrivateAPIRateLimiter())
+	r.GET("/ping/50", func(ctx *gin.Context) {
+		ctx.JSON(200, gin.H{
+			"message": "pong 50",
+		})
+	})
 
 	manageRouter := routers.RouterGroupApp.Manage
 	userRouter := routers.RouterGroupApp.User

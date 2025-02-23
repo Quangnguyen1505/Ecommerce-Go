@@ -403,3 +403,5 @@
 {"level":"INFO","time":"2025-02-05T14:13:14.634+0700","caller":"initialize/redis.go:29","msg":"initialization Redis Successfully!"}
 {"level":"INFO","time":"2025-02-05T14:26:36.078+0700","caller":"initialize/postgresqlC.go:32","msg":"initialization PostgresqlC Successfully!"}
 {"level":"INFO","time":"2025-02-05T14:26:36.180+0700","caller":"initialize/redis.go:29","msg":"initialization Redis Successfully!"}
+{"level":"INFO","time":"2025-02-23T18:13:17.224+0700","caller":"initialize/postgresqlC.go:32","msg":"initialization PostgresqlC Successfully!"}
+{"level":"INFO","time":"2025-02-23T18:13:17.310+0700","caller":"initialize/redis.go:29","msg":"initialization Redis Successfully!"}
