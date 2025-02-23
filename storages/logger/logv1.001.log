@@ -405,3 +405,11 @@
 {"level":"INFO","time":"2025-02-05T14:26:36.180+0700","caller":"initialize/redis.go:29","msg":"initialization Redis Successfully!"}
 {"level":"INFO","time":"2025-02-23T18:13:17.224+0700","caller":"initialize/postgresqlC.go:32","msg":"initialization PostgresqlC Successfully!"}
 {"level":"INFO","time":"2025-02-23T18:13:17.310+0700","caller":"initialize/redis.go:29","msg":"initialization Redis Successfully!"}
+{"level":"INFO","time":"2025-02-23T18:55:32.643+0700","caller":"initialize/postgresqlC.go:32","msg":"initialization PostgresqlC Successfully!"}
+{"level":"INFO","time":"2025-02-23T18:55:32.690+0700","caller":"initialize/redis.go:29","msg":"initialization Redis Successfully!"}
+{"level":"INFO","time":"2025-02-23T19:03:06.722+0700","caller":"initialize/postgresqlC.go:32","msg":"initialization PostgresqlC Successfully!"}
+{"level":"INFO","time":"2025-02-23T19:03:06.778+0700","caller":"initialize/redis.go:29","msg":"initialization Redis Successfully!"}
+{"level":"INFO","time":"2025-02-23T19:09:28.767+0700","caller":"initialize/postgresqlC.go:32","msg":"initialization PostgresqlC Successfully!"}
+{"level":"INFO","time":"2025-02-23T19:09:28.880+0700","caller":"initialize/redis.go:29","msg":"initialization Redis Successfully!"}
+{"level":"INFO","time":"2025-02-23T19:14:00.318+0700","caller":"initialize/postgresqlC.go:32","msg":"initialization PostgresqlC Successfully!"}
+{"level":"INFO","time":"2025-02-23T19:14:00.367+0700","caller":"initialize/redis.go:29","msg":"initialization Redis Successfully!"}

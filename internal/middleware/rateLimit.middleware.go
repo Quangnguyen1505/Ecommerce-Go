@@ -70,7 +70,7 @@ func (rl *RateLimiter) PublicAPIRateLimiter() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		urlPath := c.Request.URL.Path
 		rateLimitPath := rl.filterLimitUrlPath(urlPath)
-		if rateLimitPath != nil {
+		if rateLimitPath == rl.publicAPIRateLimiter {
 			log.Println("Client IP ----> ", c.ClientIP())
 
 			key := fmt.Sprintf("%s-%s", "111-222-333-44", urlPath)
@@ -95,7 +95,8 @@ func (rl *RateLimiter) UserPrivateAPIRateLimiter() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		urlPath := c.Request.URL.Path
 		rateLimitPath := rl.filterLimitUrlPath(urlPath)
-		if rateLimitPath != nil {
+
+		if rateLimitPath == rl.userPrivateAPIRateLimiter {
 			userId := 1001
 			key := fmt.Sprintf("%s-%s", userId, urlPath)
 			limiterContext, err := rateLimitPath.Get(c, key)

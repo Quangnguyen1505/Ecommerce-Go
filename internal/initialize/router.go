@@ -31,17 +31,17 @@ func Initrouter() *gin.Engine {
 		})
 	})
 
-	r.Use(middleware.NewRateLimiter().PublicAPIRateLimiter())
-	r.GET("/ping/80", func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{
-			"message": "pong 80",
-		})
-	})
-
 	r.Use(middleware.NewRateLimiter().UserPrivateAPIRateLimiter())
 	r.GET("/ping/50", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{
 			"message": "pong 50",
+		})
+	})
+
+	r.Use(middleware.NewRateLimiter().PublicAPIRateLimiter())
+	r.GET("/ping/80", func(ctx *gin.Context) {
+		ctx.JSON(200, gin.H{
+			"message": "pong 80",
 		})
 	})
 
