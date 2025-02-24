@@ -3,12 +3,12 @@ package routers
 // import (
 // 	"github.com/gin-gonic/gin"
 // 	c "github.com/ntquang/ecommerce/internal/controller"
-// 	"github.com/ntquang/ecommerce/internal/middleware"
+// 	"github.com/ntquang/ecommerce/internal/middlewares"
 // )
 
 // func NewRouter() *gin.Engine {
 // 	r := gin.Default()
-// 	r.Use(middleware.Authentication())
+// 	r.Use(middlewares.Authentication())
 // 	v1 := r.Group("/v1")
 // 	{
 // 		v1.GET("/ping", c.NewPongController().Pong)

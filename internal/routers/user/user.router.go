@@ -3,23 +3,27 @@ package user
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/ntquang/ecommerce/internal/controller/account"
-	"github.com/ntquang/ecommerce/internal/middleware"
+	"github.com/ntquang/ecommerce/internal/middlewares"
 )
 
 type UserRouter struct{}
 
 func (pr *UserRouter) InitUserRouter(Router *gin.RouterGroup) {
 
+	//middleware rate limit global
+	Router.Use(middlewares.NewRateLimiterV2().GlobalRateLimiterV2())
+
 	//non-dependency Injection
 	// userRepository := repo.NewUserRepository()
 	// userService := services.NewUserService(userRepository)
 	// userHandleNondenpendency := controller.NewUserController(userService)
-
 	//WIRE 	go
 	//Denpendency Injection
 	// userController, _ := wire.InitUserRouterHanlder()
-	userRouterPublic := Router.Group("/user")
+	userRouterPublic := Router.Group("/users")
+	userRouterPublic.Use(middlewares.NewRateLimiterV2().PublicAPIRateLimiterV2())
 	{
+		userRouterPublic.GET("/info-public")
 		// userRouterPublic.POST("/register", userController.Register)
 		userRouterPublic.POST("/register", account.Login.Register)
 		userRouterPublic.POST("/verifyOTP", account.Login.VerifyOTP)
@@ -27,11 +31,9 @@ func (pr *UserRouter) InitUserRouter(Router *gin.RouterGroup) {
 		userRouterPublic.POST("/updatePass", account.Login.UpdatePasswordRegister)
 	}
 
-	userRouterPrivate := Router.Group("/user")
-	userRouterPrivate.Use(middleware.Authentication())
-	// userRouterPrivate.Use(Limiter())
-	// userRouterPrivate.Use(Authen())
-	// userRouterPrivate.Use(Permission())
+	userRouterPrivate := Router.Group("/users")
+	userRouterPrivate.Use(middlewares.Authentication())
+	userRouterPrivate.Use(middlewares.NewRateLimiterV2().UserPrivateAPIRateLimiterV2())
 	{
 		userRouterPrivate.GET("/info")
 		userRouterPrivate.POST("/two-factor/setup", account.User2fa.SetupTwoFactorAuth)

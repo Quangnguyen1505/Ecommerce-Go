@@ -7,7 +7,7 @@ import (
 	"github.com/ntquang/ecommerce/internal/initialize"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
-	// gin-swagger middleware
+	// gin-swagger middlewares
 	_ "github.com/ntquang/ecommerce/docs"
 
 	swaggerFiles "github.com/swaggo/files"

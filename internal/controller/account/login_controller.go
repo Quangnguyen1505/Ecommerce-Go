@@ -24,7 +24,7 @@ type cUserLogin struct{}
 // @Param        payload body model.LoginInput true "payload"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.ErrResponse
-// @Router       /user/login [post]
+// @Router       /users/login [post]
 func (c *cUserLogin) Login(ctx *gin.Context) {
 	//implement login for register
 	var params model.LoginInput
@@ -49,7 +49,7 @@ func (c *cUserLogin) Login(ctx *gin.Context) {
 // @Param        payload body model.RegisterInput true "payload"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.ErrResponse
-// @Router       /user/register [post]
+// @Router       /users/register [post]
 func (c *cUserLogin) Register(ctx *gin.Context) {
 	//implement login for register
 	var params model.RegisterInput
@@ -80,7 +80,7 @@ func (c *cUserLogin) Register(ctx *gin.Context) {
 // @Param        payload body model.VerifyInput true "payload"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.ErrResponse
-// @Router       /user/verifyOTP [post]
+// @Router       /users/verifyOTP [post]
 func (c *cUserLogin) VerifyOTP(ctx *gin.Context) {
 	var params model.VerifyInput
 	if err := ctx.ShouldBindJSON(&params); err != nil {
@@ -104,7 +104,7 @@ func (c *cUserLogin) VerifyOTP(ctx *gin.Context) {
 // @Param        payload body model.UpdatePasswordInput true "payload"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.ErrResponse
-// @Router       /user/updatePass [post]
+// @Router       /users/updatePass [post]
 func (c *cUserLogin) UpdatePasswordRegister(ctx *gin.Context) {
 	var params model.UpdatePasswordInput
 	if err := ctx.ShouldBindJSON(&params); err != nil {

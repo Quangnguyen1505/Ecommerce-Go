@@ -1,4 +1,4 @@
-package middleware
+package middlewares
 
 import (
 	"fmt"
@@ -28,7 +28,7 @@ func NewRateLimiter() *RateLimiter {
 
 func rateLimiter(interval string) *limiter.Limiter {
 	store, err := redisStore.NewStoreWithOptions(global.Redis, limiter.StoreOptions{
-		Prefix:          "rate-limiter",
+		Prefix:          "rate-limiter", //stand before the key with the purpose of this key that key, ex: rate-limiter:clientip
 		MaxRetry:        3,
 		CleanUpInterval: time.Hour,
 	})
@@ -71,9 +71,9 @@ func (rl *RateLimiter) PublicAPIRateLimiter() gin.HandlerFunc {
 		urlPath := c.Request.URL.Path
 		rateLimitPath := rl.filterLimitUrlPath(urlPath)
 		if rateLimitPath == rl.publicAPIRateLimiter {
-			log.Println("Client IP ----> ", c.ClientIP())
+			log.Println("Client IP ----> ", c.ClientIP()) //ip for client
 
-			key := fmt.Sprintf("%s-%s", "111-222-333-44", urlPath)
+			key := fmt.Sprintf("%s-%s", c.ClientIP(), urlPath)
 			limiterContext, err := rateLimitPath.Get(c, key)
 			if err != nil {
 				fmt.Println("Failed to check rate limit Public ", err)
@@ -97,7 +97,12 @@ func (rl *RateLimiter) UserPrivateAPIRateLimiter() gin.HandlerFunc {
 		rateLimitPath := rl.filterLimitUrlPath(urlPath)
 
 		if rateLimitPath == rl.userPrivateAPIRateLimiter {
+			//userId, err := context.GetUserIdFromUUID(c.Request.Context())
+			//if err != nil {
+			//	response.ErrorResponse(c, response.ErrTwoFactorAuthSetUpFailed, "Missing get UUID", err)
+			//}
 			userId := 1001
+			fmt.Println("userId ", userId)
 			key := fmt.Sprintf("%s-%s", userId, urlPath)
 			limiterContext, err := rateLimitPath.Get(c, key)
 			if err != nil {

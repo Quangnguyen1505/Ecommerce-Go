@@ -22,7 +22,7 @@ type cUser2FA struct{}
 // @Param        payload body model.SetupTwoFactorAuthInput true "payload"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.ErrResponse
-// @Router       /user/two-factor/setup [post]
+// @Router       /users/two-factor/setup [post]
 func (c *cUser2FA) SetupTwoFactorAuth(ctx *gin.Context) {
 	var params model.SetupTwoFactorAuthInput
 	if err := ctx.ShouldBind(&params); err != nil {
@@ -54,7 +54,7 @@ func (c *cUser2FA) SetupTwoFactorAuth(ctx *gin.Context) {
 // @Param        payload body model.TwoFactorVerifycationInput true "payload"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.ErrResponse
-// @Router       /user/two-factor/verify [post]
+// @Router       /users/two-factor/verify [post]
 func (c *cUser2FA) VerifyTwoFactorAuth(ctx *gin.Context) {
 	var params model.TwoFactorVerifycationInput
 	if err := ctx.ShouldBind(&params); err != nil {
